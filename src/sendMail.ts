@@ -1,27 +1,30 @@
-// const sendMail = async (req, res) => {
-//   const transporter = nodemailer.createTransport({
-//     host: "email",
 
-//     auth: {
-//       user: "shindechetan3408@gmail.com",
-//       pass: "3408"
-//     }
-//   });
+import nodemailer from 'nodemailer';
 
-//   // async..await is not allowed in global scope, must use a wrapper
-//   async function main() {
-//     // send mail with defined transport object
-//     const info = await transporter.sendMail({
-//       from: '"shindechetan3408@gmail.com" <Shinde@225>',
-//       to: "shindechetan.cp@gmail.com",
-//       subject: "Hello ✔", // Subject line
-//       text: "Hello world?", // plain text body
-//       html: "<b>Hello world?</b>" // html body
-//     });
 
-//     console.log("Message sent: %s", info.messageId);
-//     // Message sent: <d786aa62-4e0a-070a-47ed-0b0666549519@ethereal.email>
-//   }
-// };
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'cecil.langosh8@ethereal.email', 
+        pass: '	RWjj7QAz5ZYfM6SZTk',
+    }
+});
 
-// module.exports = sendMail
+async function sendMail(to: string, subject: string, htmlContent: string) {
+    const mailOptions = {
+        from: 'cecil.langosh8@ethereal.email',
+        to: 'shindechetan.cp@gmail.com',
+        subject,
+        html: htmlContent
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully');
+    } catch (error) {
+        console.error('Error sending email:', error);
+    }
+}
+
+export { sendMail };
+

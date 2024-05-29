@@ -7,25 +7,28 @@ const weatherAPI = "https://weatherapi-com.p.rapidapi.com/current.json";
 const weatherAPIKey = "52c5a9e588msh35885c36070b2cep19ae1bjsn82a6c98dc23e";
 const geoCodingAPIKey = "QnhWr4/WoFL2Cv8XyzmaYg==qicNcKK9PEOANJl3";
 
+// Fetching Coordinates Function
 async function fetchCoordinates(city: string, country: string) {
   const response = await axios.get(geoCodingAPI, {
     params: { city, country },
-    headers: { "X-Api-Key": geoCodingAPIKey }  // Correct header key for API Ninjas
+    headers: { "X-Api-Key": geoCodingAPIKey }
   });
   return response.data[0];
 }
 
+// WeaterApi Function
 async function fetchWeather(latitude: number, longitude: number) {
   const response = await axios.get(weatherAPI, {
     params: { q: `${latitude},${longitude}` },
     headers: {
-      "X-RapidAPI-Key": weatherAPIKey,  // Correct header key for RapidAPI
-      "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"  // Host header as specified by RapidAPI
+      "X-RapidAPI-Key": weatherAPIKey,
+      "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com"
     }
   });
   return response.data.current;
 }
 
+// Creating Database
 async function saveWeatherData(
   city: string,
   country: string,
@@ -50,14 +53,14 @@ async function getWeatherData(city?: string) {
   }
   const latestWeather = await Weather.findAll({
     attributes: [
-      'city',
-      'country',
-      [sequelize.fn('MAX', sequelize.col('time')), 'time'],
-      'weather',
-      'longitude',
-      'latitude'
+      "city",
+      "country",
+      [sequelize.fn("MAX", sequelize.col("time")), "time"],
+      "weather",
+      "longitude",
+      "latitude"
     ],
-    group: ['city', 'country', 'weather', 'longitude', 'latitude']
+    group: ["city", "country", "weather", "longitude", "latitude"]
   });
   return latestWeather;
 }

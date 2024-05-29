@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+// import nodemailer from "nodemailer";
 import express, { Request, Response } from "express";
 import {
   fetchCoordinates,
@@ -8,7 +8,8 @@ import {
 } from "./weatherService";
 import bodyParser from "body-parser";
 import { Weather } from "./weatherModel";
-// import sendMail from "./sendMail"?
+import { sendMail } from "./sendMail";
+
 
 const app = express();
 const port = 8000;
@@ -17,6 +18,8 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+// Route for weather fetching and storing api using sequelize 
 app.post("/api/SaveWeatherMapping", async (req: Request, res: Response) => {
   const cities = req.body;
   for (const cityData of cities) {
@@ -34,6 +37,7 @@ app.post("/api/SaveWeatherMapping", async (req: Request, res: Response) => {
   res.send(res);
 });
 
+//----------- Dashboard API that will be fetching the weather information from the database
 app.get("/api/weatherDashboard", async (req: Request, res: Response) => {
   const { city } = req.query;
   try {
@@ -45,94 +49,39 @@ app.get("/api/weatherDashboard", async (req: Request, res: Response) => {
 });
 
 
-app.get('/api', async (req, res) => {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'shindechetan3408@gmail.com',
-      pass: '3408'
-    }
-  });
+// Mailing the Weather Data Route 
+app.post('/api/sendWeatherEmail', async (req: Request, res: Response) => {
+  const { email, cities } = req.body;
 
-  async function main() {
-    try {
-      // send mail with defined transport object
-      const info = await transporter.sendMail({
-        from: '"shindechetan3408@gmail.com" <Shinde@225>',
-        to: 'shindechetan.cp@gmail.com',
-        subject: 'Hello ✔', // Subject line
-        text: 'Hello world?', // plain text body
-        html: '<b>Hello world?</b>' // html body
-      });
+  // Fetch weather data for the specified cities
+  let weatherDataHtml = '<h1>Weather Data</h1><table border="1"><tr><th>City</th><th>Country</th><th>Weather</th><th>Time</th><th>Longitude</th><th>Latitude</th></tr>';
 
-      console.log('Message sent: %s', info.messageId);
-      res.status(200).send('Email sent successfully');
-    } catch (error) {
-      console.error('Error sending email: %s', error);
-      res.status(500).send('Error sending email');
-    }
+  for (const cityData of cities) {
+      const { city, country } = cityData;
+      const weatherRecords = await getWeatherData(city);
+
+      for (const record of weatherRecords) {
+          weatherDataHtml += `<tr>
+              <td>${record.city}</td>
+              <td>${record.country}</td>
+              <td>${record.weather}</td>
+              <td>${record.time}</td>
+              <td>${record.longitude}</td>
+              <td>${record.latitude}</td>
+          </tr>`;
+      }
   }
 
-  await main();
+  weatherDataHtml += '</table>';
+
+  // Send the email
+  await sendMail(email, 'Weather Data Report', weatherDataHtml);
+
+  res.send('Weather data email sent successfully.');
 });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
-});
 
 
-
-
-// const sendWeatherEmail = async (recipientEmail: string, weatherData: WeatherData[]) => {
-//   const htmlTable = `
-//     <table border="1" cellpadding="5" cellspacing="0">
-//       <thead>
-//         <tr>
-//           <th>ID</th>
-//           <th>City</th>
-//           <th>Country</th>
-//           <th>Time</th>
-//           <th>Weather</th>
-//           <th>Longitude</th>
-//           <th>Latitude</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         ${weatherData
-//           .map(
-//             (data) => `
-//           <tr>
-//             <td>${data.id}</td>
-//             <td>${data.city}</td>
-//             <td>${data.country}</td>
-//             <td>${new Date(data.time).toLocaleString()}</td>
-//             <td>${data.weather}</td>
-//             <td>${data.longitude}</td>
-//             <td>${data.latitude}</td>
-//           </tr>
-//         `
-//           )
-//           .join('')}
-//       </tbody>
-//     </table>
-//   `;
-
-//   const mailOptions = {
-//     from: 'shindechetan3408@gmail.com',
-//       to: 'shindechetan.cp@gmail.com',
-//     subject: 'Weather Dashboard Report', // Subject line
-//     html: htmlTable, // html body
-//   };
-
-//   try {
-//     const info = await transporter.sendMail(mailOptions);
-//     console.log('Message sent: %s', info.messageId);
-//   } catch (error) {
-//     console.error('Error sending email: %s', error);
-//   }
-// };
-
-// export { sendWeatherEmail };
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
