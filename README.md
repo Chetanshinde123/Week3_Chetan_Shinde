@@ -9,5 +9,6 @@ Data store in Pg
 
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
+Email Sent Successfully
+![Screenshot (302)](https://github.com/Chetanshinde123/Week3_Chetan_Shinde/assets/128912491/abebb3e7-7181-4ad4-ad01-f8031467341d)
 
-![Screenshot (300)](https://github.com/Chetanshinde123/Week3_Chetan_Shinde/assets/128912491/d3fbb5d4-56c1-4539-935d-6e9b1c892250)
