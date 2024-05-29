@@ -9,7 +9,7 @@ const transporter = nodemailer_1.default.createTransport({
     service: 'gmail',
     auth: {
         user: 'shindechetan3408@gmail.com',
-        pass: 'onqg twbq osft cozp',
+        pass: 'your password',
     }
 });
 async function sendMail(subject, htmlContent) {
