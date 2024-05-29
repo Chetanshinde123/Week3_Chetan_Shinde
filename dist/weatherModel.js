@@ -4,44 +4,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Weather = void 0;
-// Weather.ts
 const sequelize_1 = require("sequelize");
 const pgConfig_1 = __importDefault(require("./pgConfig"));
 class Weather extends sequelize_1.Model {
 }
 exports.Weather = Weather;
+// Data initialize
 Weather.init({
     id: {
         type: sequelize_1.DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
+        autoIncrement: true
     },
     city: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     country: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     weather: {
         type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
     },
     time: {
         type: sequelize_1.DataTypes.DATE,
-        defaultValue: sequelize_1.DataTypes.NOW,
+        defaultValue: sequelize_1.DataTypes.NOW
     },
     longitude: {
         type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
+        allowNull: false
     },
     latitude: {
         type: sequelize_1.DataTypes.FLOAT,
-        allowNull: false,
-    },
+        allowNull: false
+    }
 }, {
     sequelize: pgConfig_1.default,
-    tableName: 'weather',
-    timestamps: false,
+    tableName: "weather",
+    timestamps: false
 });

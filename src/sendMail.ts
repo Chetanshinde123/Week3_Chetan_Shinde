@@ -5,14 +5,14 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'cecil.langosh8@ethereal.email', 
-        pass: '	RWjj7QAz5ZYfM6SZTk',
+        user: 'shindechetan3408@gmail.com', 
+        pass: 'onqg twbq osft cozp',
     }
 });
 
-async function sendMail(to: string, subject: string, htmlContent: string) {
+async function sendMail( subject: string, htmlContent: string) {
     const mailOptions = {
-        from: 'cecil.langosh8@ethereal.email',
+        from: 'shindechetan3408@gmail.com',
         to: 'shindechetan.cp@gmail.com',
         subject,
         html: htmlContent
@@ -27,4 +27,6 @@ async function sendMail(to: string, subject: string, htmlContent: string) {
 }
 
 export { sendMail };
+
+
 
